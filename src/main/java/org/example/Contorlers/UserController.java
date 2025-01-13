@@ -12,23 +12,22 @@ import org.example.Model.objects.User;
 
 public class UserController {
  
-    public String listUsers() throws IOException {
+    public static String listUsers() throws IOException {
         String sqlQuery;
         sqlQuery = "SELECT users.fullname, emails.email, users.cpf, users.birthdate, users.role FROM users JOIN emails ON users.email = emails.idemail;";
         return sqlQuery;
     }
 
-    public String getUser(String cpf) throws IOException {
+    public static String findUser(String cpf) throws IOException {
         String sqlQuery = listUsers().substring(0, listUsers().length() - 1);
         sqlQuery += " WHERE users.cpf = '" + cpf + "';";
         return sqlQuery;
     }
 
-    public String createUser(User user, Email email, Connection conn) throws IOException, SQLException {
-        EmailController emailController = new EmailController();
-        boolean success = DbController.executeStatment(conn, emailController.createEmail(email.getEmail()), Arrays.asList(email.getEmail()));
+    public static String createUser(User user, Email email, Connection conn) throws IOException, SQLException {
+        boolean success = DbController.executeStatment(conn, EmailController.createEmail(), EmailController.createEmailList(email.getEmail()));
         if (success) {
-            ResultSet rs = DbController.executeQuery(conn, emailController.findEmail(email.getEmail()));
+            ResultSet rs = DbController.executeQuery(conn, EmailController.findEmail(email.getEmail()));
             rs.next();
             user.setEmail(rs.getString("idemail"));            
             rs.close();
@@ -44,23 +43,24 @@ public class UserController {
 
     }
 
-    public String createUser(User user) throws IOException {
+    public static String createUser(User user) throws IOException {
         String sqlQuery;
         sqlQuery = "INSERT INTO users (fullname, email, password, birthdate, cpf) VALUES (?, ?, ?, ?, ?);";
         return sqlQuery;
     }
 
-    public List<?> createUserList(User user) throws IOException {
-        return Arrays.asList(user.getFullName(), user.getEmail(), user.getPassword(), user.getBirthDate(), user.getCpf());
+    public static List<?> createUserList(User user) throws IOException {
+        System.out.println();
+        return Arrays.asList(user.getFullName(), user.getEmailObject().getId(), user.getPassword(), user.getBirthDate(), user.getCpf());
     }
     
-    public String updateUser(User user) throws IOException {
+    public static String updateUser(User user) throws IOException {
         String sqlQuery;
-        sqlQuery = "UPDATE users SET name = ?, email = ?, WHERE idUser  = ?";
+        sqlQuery = "UPDATE users SET name = ?, email = ?, WHERE idUser  = ?;";
         return sqlQuery;
     }
 
-    public String updateUserSensibleInformation(User user, String option) throws IOException {
+    public static String updateUserSensibleInformation(User user, String option) throws IOException {
         String sqlQuery = "UPDATE users SET ";
         String[] options;
         if (option.contains(" ")) {
@@ -86,7 +86,7 @@ public class UserController {
         return sqlQuery += " WHERE idUser  = ?";
     }
 
-    public List<?> updateUserList(User user) throws IOException {
+    public static List<?> updateUserList(User user) throws IOException {
         return Arrays.asList(user.getFullName(), user.getEmail());
     }
 
@@ -112,7 +112,7 @@ public class UserController {
         return null;
     }
 
-    public String deleteUser(String id) throws IOException {
+    public static String deleteUser(String id) throws IOException {
         String sqlQuery;
         sqlQuery = "DELETE FROM users WHERE id = ?";
         return sqlQuery;

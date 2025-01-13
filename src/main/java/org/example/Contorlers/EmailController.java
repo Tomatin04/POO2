@@ -1,34 +1,43 @@
 package org.example.Contorlers;
 
+import java.util.List;
+
 public class EmailController {
     
-    public String listEmails() {
+    public static String listEmails() {
         String sqlQuery;
         sqlQuery = "SELECT * FROM emails;";
         return sqlQuery;
     }
 
-    public String findEmail(String email) {
+    public static String findEmail(String email) {
         String sqlQuery = "SELECT * FROM emails WHERE email = '" + email + "';";
         return sqlQuery;
     }
 
-    public String createEmail(String email) {
+    public static String createEmail() {
         String sqlQuery;
-        sqlQuery = "INSERT INTO emails (email) VALUES ('" + email + "');";
+        sqlQuery = "INSERT INTO emails (email) VALUES (?);";
         return sqlQuery;
     }
 
-    public String updateEmail(String updatedEmail, String outdatedEmail) {
+    public static String updateEmail() {
         String sqlQuery;
-        sqlQuery = "UPDATE emails SET email = '" + updatedEmail + "' WHERE email = '" + outdatedEmail + "';";
+        sqlQuery = "UPDATE emails SET email = ? WHERE email = ?;";
         return sqlQuery;
     }
 
-    public String deleteEmail(String email) {
+    public static String deleteEmail() {
         String sqlQuery;
-        sqlQuery = "DELETE FROM emails WHERE email = '" + email + "';";
+        sqlQuery = "DELETE FROM emails WHERE email = ?;";
         return sqlQuery;
     }
 
+    public static List<?> createEmailList(String email) {
+        return List.of(email);
+    }
+
+    public static List<?> createEmailList(String email, String email2) {
+        return List.of(email, email2);
+    }
 }

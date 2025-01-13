@@ -79,7 +79,9 @@ public class DbController {
         boolean result = false;
         try {
             PreparedStatement pstmt = conn.prepareStatement(query);
+            System.out.println(query + "\n" + dataList); 
             for(int i = 0; i < dataList.size(); i++){
+                System.out.println(dataList.get(i) + ": " + dataList.get(i).getClass().getSimpleName());
                 switch (dataList.get(i).getClass().getSimpleName()) {
                     case "Integer":
                         pstmt.setInt(i+1, Integer.parseInt(dataList.get(i).toString()));
@@ -92,6 +94,7 @@ public class DbController {
                         pstmt.close();
                         return false;
                 }
+                System.out.println(pstmt.toString());
             }
             try {
                 pstmt.execute();

@@ -10,14 +10,14 @@ public class User {
     private String birthDate;
     private String cpf;
 
-    public User(String fullName, Email email, String password, String birthDate, String cpf) {
+    public User() {
         this.id = 0;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
+        this.fullName = "";
+        this.email = new Email("");
+        this.password = "";
         this.role = "users";
-        this.birthDate = birthDate;
-        this.cpf = cpf;
+        this.birthDate = "";
+        this.cpf = "";
     }
 
     public int getId() {
@@ -32,16 +32,37 @@ public class User {
         return this.fullName;
     }
 
-    public String getEmail() {
-        return this.email.getEmail();
-    }
-
     public void setFullName(String fullName) {
         this.fullName = fullName;
     }
 
+    public String getEmail() {
+        return this.email.getEmail();
+    }
+
     public void setEmail(String email) {
         this.email.setEmail(email);
+    }
+
+    public Email getEmailObject() {
+        return this.email;
+    }
+
+    public void setEmailObject(Email email) {
+        this.email = email;
+    }
+
+    public void setEmailId(int id) {
+        System.out.println("Setting email id: " + id);
+        this.email.setId(id);
+    }
+
+    public String getRole() {
+        return this.role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getPassword() {
