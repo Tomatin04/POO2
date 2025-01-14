@@ -14,7 +14,7 @@ public class UserController {
  
     public static String listUsers() throws IOException {
         String sqlQuery;
-        sqlQuery = "SELECT users.fullname, emails.email, users.cpf, users.birthdate, users.role FROM users JOIN emails ON users.email = emails.idemail;";
+        sqlQuery = "SELECT users.iduser, users.fullname, emails.idemail, emails.email, users.cpf, users.birthdate, users.role FROM users JOIN emails ON users.email = emails.idemail;";
         return sqlQuery;
     }
 
@@ -86,7 +86,7 @@ public class UserController {
         return sqlQuery += " WHERE idUser  = ?";
     }
 
-    public static List<?> updateUserList(User user) throws IOException {
+    public List<?> updateUserList(User user) throws IOException {
         return Arrays.asList(user.getFullName(), user.getEmail());
     }
 

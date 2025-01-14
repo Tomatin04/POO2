@@ -1,19 +1,18 @@
 package org.example.views;
 
+import org.example.Model.services.DbOperations;
+import org.example.Model.services.UserCrud;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.example.Contorlers.DbController;
-import org.example.Contorlers.EmailController;
-import org.example.Contorlers.UserController;
-import org.example.Model.services.DbOperations;
-import org.example.Model.services.UserCrud;
 import org.example.Model.objects.User;
 
 public class Main {
-    public static void main(String[] args){
+    public static void main(String[] args) throws IOException, java.io.IOException, SQLException {
 
         DbOperations dbop = new DbOperations();
         dbop.initDbConnection();
@@ -27,24 +26,23 @@ public class Main {
         user.setCpf("12345678900");
 
         if (dbop.dbStatus.equals("connected")) {
-            UserCrud.createUser(user, dbop.getDbConnection());
-            System.out.println(user.getEmail());
-            try {
-                ResultSet rs = DbController.executeQuery(conn, EmailController.findEmail(user.getEmail()));
-                if (rs.next()) {
-                    user.setEmailId(rs.getInt("idemail"));
+            int status = UserCrud.createUser(user, dbop.getDbConnection());
+            if (status == 200) {
+                System.out.println("User created successfully.");
+                try {
+                    Connection conn = dbop.getDbConnection();
+                    String sqlQuery = "SELECT users.iduser, users.fullname, emails.idemail, emails.email, users.cpf, users.birthdate, users.role FROM users JOIN emails ON users.email = emails.idemail;";
+                    ResultSet rs = DbController.executeQuery(conn, sqlQuery);
+                    if (rs.next()) {
+                        user.setId(rs.getInt("iduser"));
+                        user.setRole(rs.getString("role"));
+                        user.setEmailId(rs.getInt("idemail"));
+                    }
+                    String token = org.example.Model.services.token.generateToken(user, true);
+                    System.out.println("Token: " + token);                    
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                System.out.println(user.getEmailObject().getId());
-                rs.close();
-                if (dbop = DbController.executeStatment(conn, UserController.createUser(user), UserController.createUserList(user))) {
-                    System.out.println("User created successfully.");
-                } else {
-                    System.out.println("Error while creating user.");
-                }
-            } catch (IOException e) {
-                System.out.println("Error while creating user: " + e.getMessage());
-            } catch (SQLException e) {
-                System.out.println("SQL Error while creating user: " + e.getMessage());
             }
         }
     }
