@@ -89,4 +89,9 @@ public class User {
         this.cpf = cpf;
     }
 
+    @Override
+    public String toString() { 
+        return "User [id=" + id + ", fullName=" + fullName + ", email=" + email.getEmail() + ", password=" + password + ", role=" + role + ", birthDate=" + birthDate + ", cpf=" + cpf + "]";
+    }
+
 }
