@@ -1,5 +1,10 @@
 package org.example.Model.objects;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import org.example.Contorlers.LoginController;
+
 public class User {
  
     private int id;
@@ -9,6 +14,7 @@ public class User {
     private String role;
     private String birthDate;
     private String cpf;
+    private String token;
 
     public User() {
         this.id = 0;
@@ -18,6 +24,7 @@ public class User {
         this.role = "users";
         this.birthDate = "";
         this.cpf = "";
+        this.token = "";
     }
 
     public int getId() {
@@ -87,6 +94,24 @@ public class User {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public boolean login(Connection conn, Token token) {
+        try {
+            this.token = LoginController.login(this.email.getEmail(), this.password, conn, token);
+        } catch (SQLException e) {
+            System.out.println("Error while trying to login: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+        if (this.token != null && !this.token.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
+
+    public boolean logout(Token tokenModel) {
+        return LoginController.logout(this.token, tokenModel);
     }
 
     @Override

@@ -108,7 +108,7 @@ public class TokenController {
             return null;
         }
         return Jwts.builder()
-                .setSubject(user.getFullName() + "#" + user.getId())
+                .setSubject(user.getFullName().substring(0, 5) + "#" + user.getId())
                 .claim("email", user.getEmail())
                 .claim("role", user.getRole())
                 .claim("isActive", isActive)
@@ -129,13 +129,13 @@ public class TokenController {
     }
     
     private static boolean validateToken(String token, Token tokenModel) {
+        if (token == null || token.isEmpty() || tokenModel == null || tokenModel.isBlackListed(token)) {
+            System.out.println("Token inválido: token nulo ou vazio.");
+            return false;
+        }
         if (tokenModel.getKey() == null || tokenModel.getKey().getEncoded() == null || tokenModel.getKey().getEncoded().length == 0) {
             System.out.println("Token inválido: chave nula ou vazia.");
             return false; 
-        }
-        if (token == null || token.isEmpty() || tokenModel == null) {
-            System.out.println("Token inválido: token nulo ou vazio.");
-            return false;
         }
         try {
             Jwts.parserBuilder().setSigningKey(tokenModel.getKey()).build().parseClaimsJws(token);
