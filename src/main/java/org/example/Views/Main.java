@@ -26,6 +26,7 @@ public class Main {
         DbOperations dbop = new DbOperations();
         dbop.initDbConnection();
         Scanner scanner = new Scanner(System.in);
+        User user = new User();
         int option = -1;
         do {
             if (option != -1) {
@@ -33,18 +34,22 @@ public class Main {
             }
             System.out.println("1 - Login");
             System.out.println("2 - Register");
-            System.out.println("3 - Exit");
+            System.out.println("3 - Update");
+            System.out.println("10 - Exit");
             System.out.print("Option: ");
             option = scanner.nextInt();
             scanner.nextLine();
             switch (option) {
                 case 1:
-                    LoginView.login(token, dbop, scanner);
+                    user.setToken(LoginView.login(token, dbop, scanner));
                     break;
                 case 2:
                     RegisterUserView.register(dbop, scanner);
                     break;
                 case 3:
+                    UpdateUserView.updateUser(token, dbop, scanner, user.getToken());
+                    break;
+                case 10:
                     System.out.println("Goodbye!");
                     break;
                 default:

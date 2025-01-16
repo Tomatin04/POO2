@@ -166,7 +166,6 @@ public class TokenController {
     String[] subjectParts = subject.split("#");
     user.setFullName(subjectParts[0]);
     user.setId(Integer.parseInt(subjectParts[1]));
-    System.out.println(user.toString());
     return user;
 }
    

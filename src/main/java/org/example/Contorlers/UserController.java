@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,9 +19,21 @@ public class UserController {
         return sqlQuery;
     }
 
-    public static String findUser(String cpf) throws IOException {
+    public static String findUserById(String id) throws IOException {
+        String sqlQuery;
+        sqlQuery = listUsers() + " WHERE users.iduser = " + id + ";";
+        return sqlQuery;
+    }
+
+    public static String findUserByCPF(String cpf) throws IOException {
         String sqlQuery = listUsers().substring(0, listUsers().length() - 1);
         sqlQuery += " WHERE users.cpf = '" + cpf + "';";
+        return sqlQuery;
+    }
+
+    public static String findUserByEmail(String email) throws IOException {
+        String sqlQuery = listUsers().substring(0, listUsers().length() - 1);
+        sqlQuery += " WHERE emails.email = '" + email + "';";
         return sqlQuery;
     }
 
@@ -55,70 +68,100 @@ public class UserController {
     }
     
     public static String updateUser(User user) throws IOException {
-        String sqlQuery;
-        sqlQuery = "UPDATE users SET name = ?, email = ?, WHERE idUser  = ?;";
+        if (user == null || user.getId() <= 0) {
+            return null;
+        }
+        List<String> options = listValidItens(user);
+        if (options.isEmpty()) {
+            System.out.println("No valid options found.");
+            return null;
+        }
+        String sqlQuery = "UPDATE users SET ";
+        for (String op : options) {
+            switch (op) {
+                case "name":
+                    sqlQuery += "name = ?";
+                    break;
+                case "email":
+                    sqlQuery += "email = ?";
+                    break;
+                case "password":
+                    sqlQuery += "password = ?";
+                    break;
+                case "cpf":
+                    sqlQuery += "cpf = ?";
+                    break;
+                case "birthDate":
+                    sqlQuery += "birthdate = ?";
+                    break;
+            }
+            if (options.indexOf(op) < options.size() - 1) {
+                sqlQuery += ", ";
+            }
+        }
+        sqlQuery += " WHERE idUser = ?;";
+        if (sqlQuery == "UPDATE users SET WHERE idUser = ?;") {
+            return null;
+        }
         return sqlQuery;
     }
-
-    public static String updateUserSensibleInformation(User user, String option) throws IOException {
-        String sqlQuery = "UPDATE users SET ";
-        String[] options;
-        if (option.contains(" ")) {
-            options = option.split(" ");
-        }else{
-            options = new String[]{option};
-        }
-        for (String opt : options) {
-            switch (opt) {
+    
+    public static List<?> updateUserList(User user) throws IOException {
+        List<String> options = listValidItens(user);
+        List<Object> list = new ArrayList<>();
+        for (String op : options) {
+            switch (op) {
+                case "name":
+                    list.add(user.getFullName());
+                    break;
+                case "email":
+                    list.add(user.getEmailObject().getId());
+                    break;
                 case "password":
-                    sqlQuery += "password = ?, ";
+                    list.add(user.getPassword());
                     break;
                 case "cpf":
-                    sqlQuery += "cpf = ?, ";
+                    list.add(user.getCpf());
                     break;
                 case "birthDate":
-                    sqlQuery += "birthdate = ?, ";
-                    break;
-                default:
+                    list.add(user.getBirthDate());
                     break;
             }
         }
-        return sqlQuery += " WHERE idUser  = ?";
+        list.add(user.getId());
+        return list;
     }
 
-    public List<?> updateUserList(User user) throws IOException {
-        return Arrays.asList(user.getFullName(), user.getEmail());
-    }
-
-    public List<?> updateUserSensibleInformationList(User user, String option) throws IOException {
-        String[] options;
-        if (option.contains(" ")) {
-            options = option.split(" ");
-        }else{
-            options = new String[]{option};
+    private static List<String> listValidItens(User user) {
+        List<String> options = new ArrayList<>();
+        if (user.getId() > 0) {
+            options.add("id");
         }
-        for (String opt : options) {
-            switch (opt) {
-                case "password":
-                    return Arrays.asList(user.getPassword(), user.getId());
-                case "cpf":
-                    return Arrays.asList(user.getCpf(), user.getId());
-                case "birthDate":
-                    return Arrays.asList(user.getBirthDate(), user.getId());
-                default:
-                    break;
-            }
+        if (user.getFullName().length() > 0) {
+            options.add("name");
         }
-        return null;
+        if (user.getEmailObject().getId() > 0) {
+            options.add("email");
+        }
+        if (user.getPassword().length() > 0) {
+            options.add("password");
+        }
+        if (user.getCpf().length() > 0) {
+            options.add("cpf");
+        }
+        if (user.getBirthDate().length() > 0) {
+            options.add("birthDate");
+        }
+        return options;
     }
 
-    public static String deleteUser(String id) throws IOException {
+    public static String deleteUser(int id) throws IOException {
         String sqlQuery;
         sqlQuery = "DELETE FROM users WHERE id = ?";
         return sqlQuery;
     }
 
-    public List<?> deleteUserList(String id) throws IOException {
+    public static List<?> deleteUserList(int id) throws IOException {
         return Arrays.asList(id);
     }
 

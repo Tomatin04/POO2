@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.example.Contorlers.DbController;
 import org.example.Contorlers.EmailController;
+import org.example.Contorlers.TokenController;
 import org.example.Contorlers.UserController;
+import org.example.Model.objects.Token;
 import org.example.Model.objects.User;
 
 public class UserCrud {
@@ -31,7 +35,7 @@ public class UserCrud {
                 return "'Email already in use.'";
             } else {
                 rs.close();
-                rs = DbController.executeQuery(conn, UserController.findUser(user.getCpf()));
+                rs = DbController.executeQuery(conn, UserController.findUserByCPF(user.getCpf()));
                 if (rs.next()) {
                     return "CPF already in use.";
                 } else {
@@ -115,31 +119,95 @@ public class UserCrud {
         }
     }
 
-    // public static int updateUser(User user, Connection conn) {
-    //     if (avoidNullBlankValues(user)) {
-    //         return 401;
-    //     }
-    //     try {
-    //         ResultSet rs = DbController.executeQuery(conn, UserController.findUser(user.getCpf()));
-    //         if (rs.next()) {
-    //             user.setId(rs.getInt("iduser"));
-    //             rs.close();
-    //             try {
-    //                 if (DbController.executeStatment(conn, UserController.updateUser(user), UserController.updateUserList(user))) {
-    //                     return 200;
-    //                 } else {
-    //                     return 401;
-    //                 }
-    //             } catch (IOException e) {
-    //                 return 401;
-    //             }
-    //         } else {
-    //             return 404;
-    //         }
-    //     } catch (SQLException e) {
-    //         return 403;
-    //     } catch (IOException e) {
-    //         return 403;
-    //     }
-    // }
+    public static int updateUser(User user, Connection conn, String token, Token tokenModel) {
+        if (user == null || conn == null || token == null || tokenModel == null) {
+            System.out.println("Null values found on updateUser parametrers.");
+            return 401;
+        }
+        User userToken = TokenController.getUserDataFromToken(token, tokenModel);
+        if (userToken == null || userToken.getId() <= 1) {
+            System.out.println("Token invalid or null values found on updateUser parametrers.");
+            return 401;
+        }
+        if (user.getId() <= 1 && (!userToken.getRole().equals("admin") || user.getId() != userToken.getId()) ) {
+            System.out.println("Unauthorized user.");
+            return 403;
+        }
+        try {
+            String sqlQuery = UserController.updateUser(user);
+            if (sqlQuery == null) {
+                System.out.println("Error while updating user.");
+                return 401;
+            }
+            if (DbController.executeStatment(conn, sqlQuery, UserController.updateUserList(user))) {
+                return 200;
+            } else {
+                System.out.println("Error while updating user.");
+                return 402;
+            }
+        } catch (Exception e) {
+            System.out.println("Error while updating user: " + e.getMessage());
+            return 401;
+        }
+    }
+
+    public static int deleteUser(User user, Connection conn, String token, Token tokenModel) {
+        if (user == null || conn == null || token == null || tokenModel == null) {
+            System.out.println("Null values found on deleteUser parametrers.");
+            return 401;
+        }
+        User userToken = TokenController.getUserDataFromToken(token, tokenModel);
+        if (userToken == null || userToken.getId() <= 1 || userToken.getRole() == null || userToken.getRole().isBlank() || userToken.getRole().isEmpty()) {
+            System.out.println("Token invalid or null values found on deleteUser parametrers.");
+            return 401;
+        }
+        if (user.getId() <= 1 && (!userToken.getRole().equals("admin") || user.getId() != userToken.getId()) ) {
+            System.out.println("Unauthorized user.");
+            return 403;
+        }
+        try {
+            if (DbController.executeStatment(conn, UserController.deleteUser(user.getId()), UserController.deleteUserList(user.getId()))) {
+                return 200;
+            } else {
+                System.out.println("Error while deleting user.");
+                return 402;
+            }
+        } catch (Exception e) {
+            System.out.println("Error while deleting user: " + e.getMessage());
+            return 401;
+        }
+    }
+
+    public static List<User> listAllUsers(Connection conn, String token, Token tokenModel) {
+        if (conn == null || token == null || tokenModel == null) {
+            System.out.println("Null values found on listAllUsers parametrers.");
+            return null;
+        }
+        User userToken = TokenController.getUserDataFromToken(token, tokenModel);
+        if (userToken == null || userToken.getId() <= 1 || userToken.getRole() == null || !userToken.getRole().equals("admin")) {
+            System.out.println("Token invalid or null values found on listAllUsers parametrers.");
+            return null;
+        }
+        try {
+            ResultSet rs = DbController.executeQuery(conn, UserController.listUsers());
+            if (rs == null) {
+                System.out.println("Error while listing users.");
+                return null;
+            }
+            List<User> users = new ArrayList<>();
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("iduser"));
+                user.setFullName(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
+                user.setBirthDate(rs.getString("birthdate"));
+                user.setCpf(rs.getString("cpf"));
+                users.add(user);
+            }
+            return users;
+        } catch (Exception e) {
+            System.out.println("Error while listing users: " + e.getMessage());
+            return null;
+        }
+    }
 }

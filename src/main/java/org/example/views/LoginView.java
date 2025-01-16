@@ -9,10 +9,10 @@ import org.example.Model.services.DbOperations;
 
 public class LoginView {
 
-    public static void login(Token token, DbOperations dbop, Scanner scanner) {
+    public static String login(Token token, DbOperations dbop, Scanner scanner) {
         if (dbop.dbStatus == "disconnected") {
             System.out.println("Error while connecting to the database.");
-            return;
+            return "";
         }
         boolean login = false;
         User user = new User();
@@ -27,6 +27,7 @@ public class LoginView {
                 login = true;
                 ClearConsole.clearConsole();
                 System.out.println("Login successful.");
+                return user.getToken();
             }
             else {
                 ClearConsole.clearConsole();
@@ -34,10 +35,11 @@ public class LoginView {
                 System.out.println("Do you want to try again? (y/n)");
                 String option = System.console().readLine();
                 if (option.equals("n")) {
-                    return;
+                    return "";
                 }
             }
         } while (!login);
+        return "";
     }
 
 }

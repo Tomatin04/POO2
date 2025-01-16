@@ -96,6 +96,14 @@ public class User {
         this.cpf = cpf;
     }
 
+    public String getToken() {
+        return this.token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public boolean login(Connection conn, Token token) {
         try {
             this.token = LoginController.login(this.email.getEmail(), this.password, conn, token);
