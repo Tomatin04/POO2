@@ -151,22 +151,33 @@ public class TokenController {
 
     
     public static User getUserDataFromToken(String token, Token tokenModel) {        
-    if (!validateToken(token, tokenModel)) {
-        return null;
+        if (!validateToken(token, tokenModel)) {
+            return null;
+        }
+        Claims claims = Jwts.parserBuilder()
+                            .setSigningKey(tokenModel.getKey())
+                            .build()
+                            .parseClaimsJws(token)
+                            .getBody();
+        User user = new User();
+        user.setEmail(claims.get("email", String.class));
+        user.setRole(claims.get("role", String.class));
+        String subject = claims.getSubject();
+        String[] subjectParts = subject.split("#");
+        user.setFullName(subjectParts[0]);
+        user.setId(Integer.parseInt(subjectParts[1]));
+        return user;
     }
-    Claims claims = Jwts.parserBuilder()
-                        .setSigningKey(tokenModel.getKey())
-                        .build()
-                        .parseClaimsJws(token)
-                        .getBody();
-    User user = new User();
-    user.setEmail(claims.get("email", String.class));
-    user.setRole(claims.get("role", String.class));
-    String subject = claims.getSubject();
-    String[] subjectParts = subject.split("#");
-    user.setFullName(subjectParts[0]);
-    user.setId(Integer.parseInt(subjectParts[1]));
-    return user;
-}
-   
+
+    public static boolean authorizate(String token, Token tokenModel, int userid) {
+        if(token == null || token.isBlank() || tokenModel == null || tokenModel.isBlackListed(token) || userid <= 1){
+            return false;
+        }
+        User user = new User();
+        user = TokenController.getUserDataFromToken(token, tokenModel);
+        if(user.getRole() != "admin" || user.getId() != userid){            
+            return false;
+        }
+        return true;
+    }
 }

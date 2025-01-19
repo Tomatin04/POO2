@@ -40,13 +40,9 @@ public class EmailCRUD {
         }
     }
 
-    public static List<Email> listAllEmails(Connection conn, String token, Token tokenModel){
-        if(token == null || token.isBlank() || tokenModel == null){
-            return null;
-        }
-        User user = new User();
-        user = TokenController.getUserDataFromToken(token, tokenModel);
-        if(user.getRole() != "admin"){            
+    public static List<Email> listAllEmails(Connection conn, User user, Token tokenModel){
+        boolean authorizate = TokenController.authorizate(user.getToken(), tokenModel, user.getId());
+        if (!authorizate) {
             return null;
         }
         try {
@@ -76,14 +72,10 @@ public class EmailCRUD {
         }
     }
 
-    public static Email findEmail(Connection conn, String email, String token, Token tokenModel){
-        if(token == null || token.isBlank() || tokenModel == null || email == null || email.isBlank()){
+    public static Email findEmail(Connection conn, String email, User user, Token tokenModel){
+        boolean authorizate = TokenController.authorizate(user.getToken(), tokenModel, user.getId());
+        if (!authorizate) {
             return null;
-        }
-        User user = new User();
-        user = TokenController.getUserDataFromToken(token, tokenModel);
-        if (user.getEmail() != email || user.getRole() != "admin") {
-            return null;            
         }
         try {
             ResultSet rs = DbController.executeQuery(conn, EmailController.findEmail(email));
@@ -112,14 +104,10 @@ public class EmailCRUD {
         }
     }
 
-    public static boolean updateEmail(Connection conn, Email email, String token, Token tokenModel){
-        if (token == null || token.isBlank() || tokenModel == null || email == null || email.getEmail() == null || email.getEmail().isBlank()) {
+    public static boolean updateEmail(Connection conn, Email email, User user, Token tokenModel){
+        boolean authorizate = TokenController.authorizate(user.getToken(), tokenModel, user.getId());
+        if (!authorizate) {
             return false;
-        }
-        User user = new User();
-        user = TokenController.getUserDataFromToken(token, tokenModel);
-        if (user.getEmailObject().getId() != email.getId() || user.getRole() != "admin") {
-            return false;            
         }
         if (email.getUser() > 1) {
             if (email.getOrganizer() > 0) {
@@ -148,14 +136,11 @@ public class EmailCRUD {
         }
     }
 
-    public static boolean deleteEmail(Connection conn, String email, String token, Token tokenModel){
-        if (token == null || token.isBlank() || tokenModel == null || email == null || email.isBlank()) {
+    public static boolean deleteEmail(Connection conn, String email, User user, Token tokenModel){
+        boolean authorizate = TokenController.authorizate(user.getToken(), tokenModel, user.getId());
+
+        if (!authorizate) {
             return false;
-        }
-        User user = new User();
-        user = TokenController.getUserDataFromToken(token, tokenModel);
-        if (user.getEmail() != email || user.getRole() != "admin") {
-            return false;            
         }
         try {
             return DbController.executeStatment(conn, EmailController.deleteEmail(), java.util.Collections.singletonList(email));

@@ -4,8 +4,8 @@ public class Email {
     
     private int id;
     private String email;
-    private int user;    // iduser
-    private int organizer;    // idorganizer
+    private int user;    
+    private int organizer;    
 
     public Email(String email) {
         this.email = email;

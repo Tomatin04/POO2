@@ -3,7 +3,7 @@ package org.example.controllers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.model.objects.Organizer;
+import org.example.models.objects.Organizer;
 
 public class OrganizerController {
  
@@ -40,7 +40,7 @@ public class OrganizerController {
         String sqlQuery;
         sqlQuery = "DELETE organizers.idorganizer FROM organizers LEFT JOIN events ON " +
         "organizers.idorganizer = events.organizer WHERE organizers.idorganizer = ? AND(" +
-        "events.organizer IS NULL OR events.status IN ('encerrado', 'desativado');";
+        "events.organizer IS NULL OR events.status IN ('CLOSED', 'DESACTIVATED');";
         return sqlQuery;
     }
 
@@ -78,7 +78,9 @@ public class OrganizerController {
     }
 
     public static String findOrganizerByEmail(){
-        return ""
+        String sqlQuery;
+        sqlQuery = "SELECT * FROM organizers WHERE email = ?";
+        return sqlQuery;
     }
 
     public static String findAllOrganizerInformations(){

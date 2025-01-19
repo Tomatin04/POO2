@@ -12,6 +12,11 @@ public class EmailController {
         return sqlQuery;
     }
 
+    public static String findEmail(int id) {
+        String sqlQuery = "SELECT * FROM emails WHERE idemail = " + id + ";";
+        return sqlQuery;
+    }
+
     public static String findEmail(String email) {
         String sqlQuery = "SELECT * FROM emails WHERE email = '" + email + "';";
         return sqlQuery;

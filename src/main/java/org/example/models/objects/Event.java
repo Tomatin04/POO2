@@ -13,8 +13,11 @@ public class Event {
     private String adress;
     private float price;
     private int organizer;
-    private int maxcapacity;
-    private String status;
+    private int maxCapacity;
+    public enum Status {
+        CLOSED, OPEN, TERMINATED, CANCEL, DESACTIVATED
+    }
+    private Status status;
 
     public Event() {
         this.id = 0;
@@ -27,9 +30,8 @@ public class Event {
         this.location = "";
         this.adress = "";
         this.price = 0;
-        this.organizer = 0;
-        this.maxcapacity = 0;
-        this.status = "closed";
+        this.status = Status.CLOSED;
+        this.maxCapacity = 0;
     }
 
     public void setId(int id) {
@@ -120,20 +122,19 @@ public class Event {
         return this.organizer;
     }
 
-    public void setMaxcapacity(int maxcapacity) {
-        this.maxcapacity = maxcapacity;
+    public void setMaxCapacity(int maxCapacity) {
+        this.maxCapacity = maxCapacity;
     }
 
-    public int getMaxcapacity() {
-        return this.maxcapacity;
+    public int getMaxCapacity() {
+        return this.maxCapacity;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return this.status;
     }
-
 }

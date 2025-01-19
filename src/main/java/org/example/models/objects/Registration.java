@@ -4,15 +4,18 @@ public class Registration {
  
     private int id;
     private int user;
-    private Event event;
-    private String status;
+    private int event;
+    private enum Status {
+        CALCELLED, WAITING_PAYMENT, WAITING_RSVP, CONFIRMED
+    }
+    private Status status;
     private String registrationDate;
     
     public Registration() {
         this.id = 0;
         this.user = 0;
-        this.event = new Event();
-        this.status = "";
+        this.event = 0;
+        this.status = Status.WAITING_PAYMENT;
         this.registrationDate = "";
     }
 
@@ -32,19 +35,19 @@ public class Registration {
         return this.user;
     }
 
-    public void setEvent(Event event) {
+    public void setEvent(int event) {
         this.event = event;
     }
 
-    public Event getEvent() {
+    public int getEvent() {
         return this.event;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 
-    public String getStatus() {
+    public Status getStatus() {
         return this.status;
     }
 
