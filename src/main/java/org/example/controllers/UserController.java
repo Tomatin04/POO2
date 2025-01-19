@@ -1,4 +1,4 @@
-package org.example.Contorlers;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.example.Model.objects.Email;
-import org.example.Model.objects.User;
+import org.example.models.objects.Email;
+import org.example.models.objects.User;
 
 public class UserController {
  
@@ -19,7 +19,7 @@ public class UserController {
         return sqlQuery;
     }
 
-    public static String findUserById(String id) throws IOException {
+    public static String findUserById(int id) throws IOException {
         String sqlQuery;
         sqlQuery = listUsers() + " WHERE users.iduser = " + id + ";";
         return sqlQuery;

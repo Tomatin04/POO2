@@ -1,4 +1,4 @@
-package org.example.Model.objects;
+package org.example.models.objects;
 
 public class Organizer{
 

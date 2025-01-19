@@ -1,9 +1,9 @@
-package org.example.Model.objects;
+package org.example.models.objects;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import org.example.Contorlers.LoginController;
+import org.example.controllers.LoginController;
 
 public class User {
  

@@ -1,4 +1,4 @@
-package org.example.Components;
+package org.example.components;
 
 public class ClearConsole {
     

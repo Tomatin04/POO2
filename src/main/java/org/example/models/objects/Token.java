@@ -1,4 +1,4 @@
-package org.example.Model.objects;
+package org.example.models.objects;
 
 import java.util.Base64;
 import java.util.Date;

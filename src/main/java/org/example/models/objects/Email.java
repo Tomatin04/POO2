@@ -1,10 +1,11 @@
-package org.example.Model.objects;
+package org.example.models.objects;
 
 public class Email {
     
     private int id;
     private String email;
     private int user;    // iduser
+    private int organizer;    // idorganizer
 
     public Email(String email) {
         this.email = email;
@@ -13,12 +14,8 @@ public class Email {
     public Email(int id, String email) {
         this.id = id;
         this.email = email;
-    }
-
-    public Email(int id, String email, int user) {
-        this.id = id;
-        this.email = email;
-        this.user = user;
+        this.user = 0;
+        this.organizer = 0;
     }
 
     public String getEmail() {
@@ -43,6 +40,14 @@ public class Email {
 
     public void setUser(int user) {
         this.user = user;
+    }
+
+    public int getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(int organizer) {
+        this.organizer = organizer;
     }
 
 }

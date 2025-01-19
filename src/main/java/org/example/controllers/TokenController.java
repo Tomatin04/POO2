@@ -1,4 +1,4 @@
-package org.example.Contorlers;
+package org.example.controllers;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -12,8 +12,8 @@ import java.util.Base64;
 import java.util.Date;
 import java.util.Properties;
 
-import org.example.Model.objects.Token;
-import org.example.Model.objects.User;
+import org.example.models.objects.Token;
+import org.example.models.objects.User;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;

@@ -1,8 +1,8 @@
-package org.example.Model.services;
+package org.example.models.services;
 
 import java.sql.Connection;
 
-import org.example.Contorlers.DbController;
+import org.example.controllers.DbController;
 
 public class DbOperations {
     

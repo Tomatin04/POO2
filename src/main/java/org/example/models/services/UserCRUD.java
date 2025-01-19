@@ -1,4 +1,4 @@
-package org.example.Model.services;
+package org.example.models.services;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,16 +7,16 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.example.Contorlers.DbController;
-import org.example.Contorlers.EmailController;
-import org.example.Contorlers.TokenController;
-import org.example.Contorlers.UserController;
-import org.example.Model.objects.Token;
-import org.example.Model.objects.User;
+import org.example.controllers.DbController;
+import org.example.controllers.EmailController;
+import org.example.controllers.TokenController;
+import org.example.controllers.UserController;
+import org.example.models.objects.Token;
+import org.example.models.objects.User;
 
-public class UserCrud {
+public class UserCRUD {
  
-    public static boolean avoidNullBlankValues(User user) {
+    private static boolean avoidNullBlankValues(User user) {
         if (user.getFullName().isBlank() || user.getEmail().isBlank() || user.getPassword().isBlank() || user.getBirthDate().isBlank() || user.getCpf().isBlank() || 
          user.getFullName() == null || user.getEmail() == null || user.getPassword() == null || user.getBirthDate() == null || user.getCpf() == null || user.getEmailObject().getEmail() == null) {
             return true;
@@ -25,7 +25,7 @@ public class UserCrud {
         }
     }
 
-    public static String avoidingDuplicates(User user, Connection conn) {
+    private static String avoidingDuplicates(User user, Connection conn) {
         if (avoidNullBlankValues(user)) {
             return "Null or blank values found.";
         }
@@ -210,4 +210,39 @@ public class UserCrud {
             return null;
         }
     }
+
+    public static User listUser(Connection conn, String token, Token tokenModel) {
+        if (conn == null || token == null || tokenModel == null) {
+            System.out.println("Null values found on listUser parametrers.");
+            return null;
+        }
+        User userToken = TokenController.getUserDataFromToken(token, tokenModel);
+        if (userToken == null || userToken.getId() <= 1) {
+            System.out.println("Token invalid or null values found on listUser parametrers.");
+            return null;
+        }
+        try {
+            ResultSet rs = DbController.executeQuery(conn, UserController.findUserById(userToken.getId()));
+            if (rs == null) {
+                System.out.println("Error while listing user.");
+                return null;
+            }
+            User user = new User();
+            if (rs.next()) {
+                user.setId(rs.getInt("iduser"));
+                user.setFullName(rs.getString("fullname"));
+                user.setEmail(rs.getString("email"));
+                user.setBirthDate(rs.getString("birthdate"));
+                user.setCpf(rs.getString("cpf"));
+                return user;
+            } else {
+                System.out.println("User not found.");
+                return null;
+            }
+        } catch (Exception e) {
+            System.out.println("Error while listing user: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

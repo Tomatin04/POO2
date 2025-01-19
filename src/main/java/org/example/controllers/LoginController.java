@@ -1,12 +1,12 @@
-package org.example.Contorlers;
+package org.example.controllers;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.example.Model.objects.Token;
-import org.example.Model.objects.User;
+import org.example.models.objects.Token;
+import org.example.models.objects.User;
 
 public class LoginController {
  

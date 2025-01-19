@@ -1,11 +1,11 @@
-package org.example.views;
+package org.example.views.cruduser;
 
 import java.util.Scanner;
 
-import org.example.Components.ClearConsole;
-import org.example.Model.objects.User;
-import org.example.Model.services.DbOperations;
-import org.example.Model.services.UserCrud;
+import org.example.components.ClearConsole;
+import org.example.models.objects.User;
+import org.example.models.services.DbOperations;
+import org.example.models.services.UserCRUD;
 
 public class RegisterUserView {
  
@@ -31,7 +31,7 @@ public class RegisterUserView {
             } while (birthdateValid);
             System.out.print("CPF: ");
             user.setCpf(scanner.nextLine());
-            int status = UserCrud.createUser(user, dbop.getDbConnection());
+            int status = UserCRUD.createUser(user, dbop.getDbConnection());
             if (status == 200) {
                 System.out.println("User created successfully.");
                 register = true;

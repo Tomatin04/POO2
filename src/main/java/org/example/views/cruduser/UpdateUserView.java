@@ -1,15 +1,15 @@
-package org.example.views;
+package org.example.views.cruduser;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import org.example.Components.ClearConsole;
-import org.example.Contorlers.TokenController;
-import org.example.Model.objects.Token;
-import org.example.Model.objects.User;
-import org.example.Model.services.DbOperations;
-import org.example.Model.services.UserCrud;
+import org.example.components.ClearConsole;
+import org.example.controllers.TokenController;
+import org.example.models.objects.Token;
+import org.example.models.objects.User;
+import org.example.models.services.DbOperations;
+import org.example.models.services.UserCRUD;
 
 public class UpdateUserView {
  
@@ -123,6 +123,11 @@ public class UpdateUserView {
             System.out.print("Birth date[YYYY-MM-DD]: ");
             user.setBirthDate(scanner.nextLine());
         }
-        int status = UserCrud.updateUser(user, dbop.getDbConnection(), token, tokenModel);
+        int status = UserCRUD.updateUser(user, dbop.getDbConnection(), token, tokenModel);
+        if (status == 200) {
+            System.out.println("User updated successfully.");
+        } else {
+            System.out.println("Error while updating user.");
+        }
     }
 }

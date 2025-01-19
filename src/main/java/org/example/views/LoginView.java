@@ -2,10 +2,10 @@ package org.example.views;
 
 import java.util.Scanner;
 
-import org.example.Components.ClearConsole;
-import org.example.Model.objects.Token;
-import org.example.Model.objects.User;
-import org.example.Model.services.DbOperations;
+import org.example.components.ClearConsole;
+import org.example.models.objects.Token;
+import org.example.models.objects.User;
+import org.example.models.services.DbOperations;
 
 public class LoginView {
 
