@@ -1,5 +1,6 @@
 package org.example.views;
 
+import org.example.components.ClearConsole;
 import org.example.controllers.TokenController;
 import org.example.models.objects.Token;
 import org.example.models.objects.User;
@@ -34,16 +35,13 @@ public class Main {
                 System.out.println("Please login or register to continue.");
                 System.out.println("1 - Login");
                 System.out.println("2 - Register");
+                System.out.println("10 - Exit");
             }else{
                 if (user.getToken() != null) {
                     System.out.println("1 - Logout");
                     System.out.println("2 - Update");
-                    System.out.println("3 - List your information");
+                    System.out.println("3 - List user information");
                     System.out.println("4 - Delete user");
-                    if (user.getRole() == "admin") {
-                        System.out.println("5 - List all users");
-                    }else{
-                    }
                     System.out.println("10 - Exit");
                 }
             }
@@ -54,9 +52,11 @@ public class Main {
                 case 1:
                     if (user.getToken() != null && user.getToken() != "") {
                         user.logout(token);
+                        user.setToken(null);
                     }else{
                         user.setToken(LoginView.login(token, dbop, scanner));
                     }
+                    option = -1;
                     break;
                 case 2:
                     if (user.getToken() != null && user.getToken() != "") {
@@ -64,9 +64,12 @@ public class Main {
                     }else{
                         RegisterUserView.register(dbop, scanner);
                     }
+                    option = -1;
                     break;
                 case 3:
+                    ClearConsole.clearConsole();
                     ListUserView.listUser(token, dbop, scanner, user.getToken());
+                    option = -1;
                     break;
                 case 4:
                     int id;
@@ -74,20 +77,16 @@ public class Main {
                     if (user.getId() == id) {
                         user.logout(token);                        
                     }
+                    option = -1;
                     break;
-                case 5:
-                    if (user.getRole() == "admin") {
-                        ListUserView.lisAlltUsers(token, dbop, scanner, user.getToken());
-                    }else{
-                        System.out.println("Invalid option.");
-                    }
                 case 10:
                     System.out.println("Goodbye!");
                     break;
                 default:
                     System.out.println("Invalid option.");
+                    option = -1;
                     break;
             }
-        } while (option != 3);
+        } while (option != 10);
     }
 }

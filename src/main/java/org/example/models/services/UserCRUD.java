@@ -245,4 +245,94 @@ public class UserCRUD {
         }
     }
 
+    public static User listUser(Connection conn, String token, Token tokenModel, User user){
+        if (conn == null || token == null || tokenModel == null || user == null) {
+            System.out.println("Null values found on listUser parametrers.");
+            return null;
+        }
+        User userToken = TokenController.getUserDataFromToken(token, tokenModel);
+        if (userToken == null || userToken.getId() <= 1) {
+            System.out.println("Token invalid or null values found on listUser parametrers.");
+            return null;
+        }
+        if (!userToken.getRole().equals("admin")){
+            System.out.println("Unauthorized" + userToken.getRole());
+            return null;
+        }
+        if(user.getId() > 1){
+            try {
+                ResultSet rs = DbController.executeQuery(conn, UserController.findUserById(user.getId()));
+                if (rs == null) {
+                    System.out.println("User not found");
+                    return null;
+                }
+                User userReturn = new User();
+                if (rs.next()) {
+                    userReturn.setId(rs.getInt("iduser"));
+                    userReturn.setFullName(rs.getString("fullname"));
+                    userReturn.setEmail(rs.getString("email"));
+                    userReturn.setBirthDate(rs.getString("birthdate"));
+                    userReturn.setCpf(rs.getString("cpf"));
+                    return userReturn;
+                } else {
+                    System.out.println("User not found.");
+                    return null;
+                }
+            } catch (Exception e) {
+                System.out.println("Error while listing user: " + e.getMessage());
+                return null;
+            }
+        }
+        if (user.getCpf() != "") {
+            try {
+                ResultSet rs = DbController.executeQuery(conn, UserController.findUserByCPF(user.getCpf()));
+                if (rs == null) {
+                    System.out.println("User not found");
+                    return null;
+                }
+                User userReturn = new User();
+                if (rs.next()) {
+                    userReturn.setId(rs.getInt("iduser"));
+                    userReturn.setFullName(rs.getString("fullname"));
+                    userReturn.setEmail(rs.getString("email"));
+                    userReturn.setBirthDate(rs.getString("birthdate"));
+                    userReturn.setCpf(rs.getString("cpf"));
+                    return userReturn;
+                } else {
+                    System.out.println("User not found.");
+                    return null;
+                }
+            } catch (Exception e) {
+                System.out.println("Error while listing user: " + e.getMessage());
+                return null;
+            }
+        }
+        if (user.getEmail() != "") {
+            try {
+                ResultSet rs = DbController.executeQuery(conn, UserController.findUserByEmail(user.getEmail()));
+                if (rs == null) {
+                    System.out.println("User not found");
+                    return null;
+                }
+                User userReturn = new User();
+                if (rs.next()) {
+                    userReturn.setId(rs.getInt("iduser"));
+                    userReturn.setFullName(rs.getString("fullname"));
+                    userReturn.setEmail(rs.getString("email"));
+                    userReturn.setBirthDate(rs.getString("birthdate"));
+                    userReturn.setCpf(rs.getString("cpf"));
+                    return userReturn;
+                } else {
+                    System.out.println("User not found.");
+                    return null;
+                }
+            } catch (Exception e) {
+                System.out.println("Error while listing user: " + e.getMessage());
+                return null;
+            }
+        }
+        System.out.println("Without needed information to make the search");
+        return null;
+    }
+
 }

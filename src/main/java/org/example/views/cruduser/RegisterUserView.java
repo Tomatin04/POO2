@@ -31,13 +31,13 @@ public class RegisterUserView {
             } while (birthdateValid);
             System.out.print("CPF: ");
             user.setCpf(scanner.nextLine());
+            ClearConsole.clearConsole();
             int status = UserCRUD.createUser(user, dbop.getDbConnection());
             if (status == 200) {
                 System.out.println("User created successfully.");
                 register = true;
             }
             else {
-                ClearConsole.clearConsole();
                 System.out.println("User registration failed.");
                 System.out.println("Do you want to try again? (y/n)");
                 String option = System.console().readLine();

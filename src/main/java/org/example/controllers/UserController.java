@@ -21,7 +21,7 @@ public class UserController {
 
     public static String findUserById(int id) throws IOException {
         String sqlQuery;
-        sqlQuery = listUsers() + " WHERE users.iduser = " + id + ";";
+        sqlQuery = listUsers().substring(0, listUsers().length() - 1) + " WHERE users.iduser = " + id + ";";
         return sqlQuery;
     }
 
@@ -76,6 +76,7 @@ public class UserController {
             System.out.println("No valid options found.");
             return null;
         }
+        System.out.println(options);
         String sqlQuery = "UPDATE users SET ";
         for (String op : options) {
             switch (op) {
@@ -95,7 +96,7 @@ public class UserController {
                     sqlQuery += "birthdate = ?";
                     break;
             }
-            if (options.indexOf(op) < options.size() - 1) {
+            if (op != "id" && options.indexOf(op) < options.size() - 1) {
                 sqlQuery += ", ";
             }
         }
@@ -157,7 +158,7 @@ public class UserController {
 
     public static String deleteUser(int id) throws IOException {
         String sqlQuery;
-        sqlQuery = "DELETE FROM users WHERE id = ?";
+        sqlQuery = "DELETE FROM users WHERE iduser = ?";
         return sqlQuery;
     }
 
