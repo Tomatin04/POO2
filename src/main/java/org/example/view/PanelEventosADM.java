@@ -114,7 +114,7 @@ public class PanelEventosADM extends javax.swing.JPanel {
         jPanel5.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel6.setText("LOCALIZAR EVENTO PELO ID");
+        jLabel6.setText("LOCALIZAR USUARIO PELO ID");
 
         jButton4.setText("LOCALIZAR");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -154,7 +154,7 @@ public class PanelEventosADM extends javax.swing.JPanel {
         jPanel7.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel8.setText("DELETAR EVENTO PELO ID");
+        jLabel8.setText("DELETAR USUARIO PELO ID");
 
         jButton6.setText("LOCALIZAR");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
